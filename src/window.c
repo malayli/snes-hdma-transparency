@@ -18,18 +18,36 @@
 #define REG_HDMA6 (*(vuint8 *)0x4360)
 #define REG_HDMA7 (*(vuint8 *)0x4370)
 
-const u8 tablelefttriangle[] = {
-    128, 255, // y = 128
-    80, 40, // x = 40, height = 80
-    1, 255, // Set left=255
+const u8 tableleft[] = {
+    96, 255,        // Disable window for 96 scanlines
+    0x80 | 112,      // 64 lines of single entries
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+
+    0x01, 0xff, 
+    
     0
 };
 
-const u8 tablerighttriangle[] = {
-    128, 0, // y = 128
-    80, 216, // width = 216, height = 80
-    1, 0, // Set right=0
-    0	
+const u8 tableright[] = {
+    96, 0,          // Disable window for 96 scanlines
+    0x80 | 112,		// 64 lines of single entries
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+    216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
+
+    0x00, 0xff, 
+    
+    0
 };
 
 /*!\brief Create an HDMA transparent Window.
@@ -54,15 +72,15 @@ void createTransparentWindow(u8 bgNumber, u8 color, u8 colorIntensity, u8 colorM
         case 0:
             setModeHdmaWindow(MSWIN_BG1, 
                 MSWIN1_BG1MSKENABLE, 
-                (u8 *) &tablelefttriangle, 
-                (u8 *) &tablerighttriangle);
+                (u8 *) &tableleft, 
+                (u8 *) &tableright);
             break;
 
         case 1:
             setModeHdmaWindow(MSWIN_BG2, 
                 MSWIN1_BG2MSKENABLE, 
-                (u8 *) &tablelefttriangle, 
-                (u8 *) &tablerighttriangle);
+                (u8 *) &tableleft, 
+                (u8 *) &tableright);
             break;
     }
 
