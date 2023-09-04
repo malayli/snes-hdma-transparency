@@ -37,7 +37,11 @@ int main(void) {
     bgSetDisable(2);
     setScreenOn();
 
-    createTransparentWindow(1, 0b11100000, 0b00001100, 0b10000000);
+    createTransparentWindow(40, 96, 176, 112,
+        1, 
+        0b11100000, 
+        0b00001100, 
+        0b10000000);
 
     while (1) {
         WaitForVBlank();

@@ -9,6 +9,8 @@
 #include <snes.h>
 #include "window.h"
 
+// ROM
+
 #define REG_HDMA0 (*(vuint8 *)0x4300)
 #define REG_HDMA1 (*(vuint8 *)0x4310)
 #define REG_HDMA2 (*(vuint8 *)0x4320)
@@ -18,7 +20,9 @@
 #define REG_HDMA6 (*(vuint8 *)0x4360)
 #define REG_HDMA7 (*(vuint8 *)0x4370)
 
-const u8 tableleft[] = {
+//RAM
+
+u8 hdmaTableLeft[1024] = {
     96, 255,        // Disable window for 96 scanlines
     0x80 | 112,      // 112 lines of single entries
     40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
@@ -34,7 +38,7 @@ const u8 tableleft[] = {
     0
 };
 
-const u8 tableright[] = {
+u8 hdmaTableRight[1024] = {
     96, 0,          // Disable window for 96 scanlines
     0x80 | 112,		// 112 lines of single entries
     216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216, 216,
@@ -50,7 +54,13 @@ const u8 tableright[] = {
     0
 };
 
+u8 windowIndex;
+
 /*!\brief Create an HDMA transparent Window.
+    \param x the window's x position.
+    \param y the window's y position.
+    \param width the window's width.
+    \param height the window's height.
     \param bgNumber the background number where the transparent window is displayed.
     \param color the window color (BGR format, see REG_COLDATA).
     \param colorIntensity the window color intensity (max value is 0b00011111).
@@ -58,7 +68,32 @@ const u8 tableright[] = {
     \warning Only works on BG1 and BG2.
     \note This function must be improved to work on BG3 and BG4.
 */
-void createTransparentWindow(u8 bgNumber, u8 color, u8 colorIntensity, u8 colorMath) {
+void createTransparentWindow(u8 x, u8 y, u8 width, u8 height, u8 bgNumber, u8 color, u8 colorIntensity, u8 colorMath) {
+    hdmaTableLeft[0] = y;
+    hdmaTableRight[0] = y;
+
+    hdmaTableLeft[1] = 255;
+    hdmaTableRight[1] = 0;
+
+    hdmaTableLeft[2] = 0x80 | height;
+    hdmaTableRight[2] = 0x80 | height;
+
+    windowIndex = 3;
+
+    while (windowIndex < height + 3) {
+        hdmaTableLeft[windowIndex] = x;
+        hdmaTableRight[windowIndex] = x + width;
+        windowIndex++;
+    }
+
+    hdmaTableLeft[windowIndex] = 0x01;
+    hdmaTableLeft[windowIndex+1] = 0xff;
+    hdmaTableLeft[windowIndex+2] = 0x00;
+
+    hdmaTableRight[windowIndex] = 0x00;
+    hdmaTableRight[windowIndex+1] = 0xff;
+    hdmaTableRight[windowIndex+2] = 0x00;
+
     // Enable Color Math and Activate MathWindow (on REG_CGWSEL)
     // Activate the passed colorMath when Main Screen = bgNumber (on REG_CGADSUB)
     setColorEffect(0b00010000, colorMath | (bgNumber + 1));
@@ -72,15 +107,15 @@ void createTransparentWindow(u8 bgNumber, u8 color, u8 colorIntensity, u8 colorM
         case 0:
             setModeHdmaWindow(MSWIN_BG1, 
                 MSWIN1_BG1MSKENABLE, 
-                (u8 *) &tableleft, 
-                (u8 *) &tableright);
+                (u8 *) &hdmaTableLeft, 
+                (u8 *) &hdmaTableRight);
             break;
 
         case 1:
             setModeHdmaWindow(MSWIN_BG2, 
                 MSWIN1_BG2MSKENABLE, 
-                (u8 *) &tableleft, 
-                (u8 *) &tableright);
+                (u8 *) &hdmaTableLeft, 
+                (u8 *) &hdmaTableRight);
             break;
     }
 
