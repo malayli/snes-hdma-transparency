@@ -9,23 +9,39 @@
 #include <snes.h>
 #include "window.h"
 
+// ROM
+
 extern char backgroundPic, backgroundPic_end;
 extern char backgroundPalette, backgroundPalette_end;
 extern char backgroundMap, backgroundMap_end;
 
+#define BG0 0
+#define BG1 1
+#define BG2 2
+#define BG3 3
+
+#define PAL0 0
+#define PAL1 1
+#define PAL2 2
+#define PAL3 3
+#define PAL4 4
+#define PAL5 5
+#define PAL6 6
+#define PAL7 7
+
 int main(void) {
     consoleInit();
 
-    bgInitTileSet(1, 
+    bgInitTileSet(BG1, 
         &backgroundPic, 
         &backgroundPalette, 
-        0, 
+        PAL0, 
         (&backgroundPic_end - &backgroundPic), 
-        16*1*2, 
+        16*2, 
         BG_16COLORS, 
         0x4000);
 
-    bgInitMapSet(1, 
+    bgInitMapSet(BG1, 
         &backgroundMap, 
         (&backgroundMap_end - &backgroundMap), 
         SC_32x32, 
@@ -38,7 +54,7 @@ int main(void) {
     setScreenOn();
 
     createTransparentWindow(40, 96, 176, 112,
-        1, 
+        BG1, 
         0b11100000, 
         0b00001100, 
         0b10000000);

@@ -11,14 +11,14 @@
 
 // ROM
 
-#define REG_HDMA0 (*(vuint8 *)0x4300)
-#define REG_HDMA1 (*(vuint8 *)0x4310)
-#define REG_HDMA2 (*(vuint8 *)0x4320)
-#define REG_HDMA3 (*(vuint8 *)0x4330)
-#define REG_HDMA4 (*(vuint8 *)0x4340)
-#define REG_HDMA5 (*(vuint8 *)0x4350)
-#define REG_HDMA6 (*(vuint8 *)0x4360)
-#define REG_HDMA7 (*(vuint8 *)0x4370)
+#define REG_DMA0 (*(vuint8 *)0x4300)
+#define REG_DMA1 (*(vuint8 *)0x4310)
+#define REG_DMA2 (*(vuint8 *)0x4320)
+#define REG_DMA3 (*(vuint8 *)0x4330)
+#define REG_DMA4 (*(vuint8 *)0x4340)
+#define REG_DMA5 (*(vuint8 *)0x4350)
+#define REG_DMA6 (*(vuint8 *)0x4360)
+#define REG_DMA7 (*(vuint8 *)0x4370)
 
 //RAM
 
@@ -116,6 +116,6 @@ void createTransparentWindow(u8 x, u8 y, u8 width, u8 height, u8 bgNumber, u8 co
     REG_WOBJSEL = 0b00100000;
 
     // Reset HDMA channels 4 and 5
-    REG_HDMA4 = 0;
-    REG_HDMA5 = 0;
+    REG_DMA4 = 0;
+    REG_DMA5 = 0;
 }
